@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>AVATAR | Дизайн студия превью, аватаров и шапок</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0b0b0b;
+            font-family: 'Roboto Condensed', sans-serif;
+            color: #f0f0f0;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        /* глобальные анимации */
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeScale {
+            0% { opacity: 0; transform: scale(0.92); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes glitchPulse {
+            0%, 100% { text-shadow: 0 0 0 rgba(255, 50, 150, 0); }
+            30% { text-shadow: 2px 0 0 rgba(255, 20, 120, 0.4), -2px 0 0 rgba(0, 255, 255, 0.3); }
+            60% { text-shadow: -1px 0 0 rgba(255, 0, 100, 0.5), 1px 0 0 rgba(0, 200, 255, 0.4); }
+        }
+
+        /* контейнер */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* ----- HEADER (Rockstar style: крупный, жирный, минимализм) ----- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 2.2rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 80, 180, 0.6);
+            animation: glitchPulse 5s infinite;
+            cursor: pointer;
+        }
+        .logo span {
+            color: #ff3b9a;
+            font-weight: 400;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #eee;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 500;
+            font-size: 1.2rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            transition: 0.2s;
+            padding: 6px 0;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ff3b9a;
+            box-shadow: 0 0 15px #ff3b9a;
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: #fff;
+            text-shadow: 0 0 8px #ff80bf;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* ----- HERO section (как трейлер GTA 6 — фуллскрин с видео/параллаксом) ----- */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .hero-video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+            z-index: 0;
+            filter: brightness(0.45) contrast(1.1);
+            transform: scale(1.02);
+        }
+
+        /* fallback картинка (если видео не загрузится) */
+        .hero-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 40%, #1a1a2e, #030303);
+            z-index: -1;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, #000000 0%, rgba(0,0,0,0.4) 50%, #000000 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 1000px;
+            padding: 20px;
+            animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-subtitle {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            color: #ffb6e6;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ff1a6e;
+        }
+
+        .hero-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(3.8rem, 15vw, 8rem);
+            font-weight: 800;
+            line-height: 1;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-shadow: 0 0 40px rgba(255, 0, 100, 0.7), 0 0 90px rgba(0, 200, 255, 0.2);
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            animation: glitchPulse 6s infinite;
+        }
+
+        .hero-description {
+            font-size: 1.4rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            font-weight: 300;
+            text-transform: uppercase;
+            word-spacing: 5px;
+            background: rgba(10,10,20,0.4);
+            backdrop-filter: blur(5px);
+            display: inline-block;
+            padding: 12px 28px;
+            border-left: 4px solid #ff3b9a;
+            border-right: 4px solid #00ccff;
+            letter-spacing: 2px;
+        }
+
+        /* кнопки в стиле Rockstar: крупные, с обводкой и свечением */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            padding: 18px 42px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            color: white;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 2px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn:hover {
+            background: rgba(255, 50, 150, 0.15);
+            border-color: #ff3b9a;
+            box-shadow: 0 0 30px #ff3b9a66, 0 0 10px #00a6ff4d;
+            transform: scale(1.02);
+            color: #fff;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-accent {
+            background: rgba(255, 50, 120, 0.2);
+            border-color: #ff3b9a;
+            box-shadow: 0 0 25px #ff2a7a33;
+        }
+
+        /* секции */
+        section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            margin-bottom: 60px;
+            letter-spacing: 6px;
+            position: relative;
+            display: inline-block;
+            color: white;
+        }
+        .section-title span {
+            color: #ff3b9a;
+            font-weight: 300;
+            margin-right: 15px;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 70%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff3b9a, #00ccff);
+        }
+
+        /* карточки портфолио */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .portfolio-card {
+            background: #131313;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1);
+            box-shadow: 0 15px 30px -10px black;
+            animation: fadeScale 0.8s backwards;
+            animation-delay: calc(var(--i,0) * 0.1s);
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-12px);
+            border-color: #ff3b9a;
+            box-shadow: 0 20px 35px #ff3b9a33, 0 0 20px #00aaff33;
+        }
+
+        .card-img {
+            height: 240px;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s;
+            position: relative;
+        }
+        .portfolio-card:hover .card-img {
+            transform: scale(1.05);
+        }
+
+        .card-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, #0b0b0b, transparent);
+        }
+
+        .card-content {
+            padding: 25px 20px;
+        }
+        .card-content h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            color: #ffd0e6;
+        }
+        .card-content p {
+            color: #b0b0b0;
+            font-size: 1rem;
+        }
+
+        /* цены */
+        .pricing-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        .price-card {
+            background: #111;
+            border: 1px solid #333;
+            padding: 40px 30px;
+            flex: 1 1 250px;
+            max-width: 300px;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            transition: 0.3s;
+            border-radius: 6px;
+        }
+        .price-card:hover {
+            border-color: #ff3b9a;
+            background: #181818;
+            transform: scale(1.02);
+        }
+        .price-card h4 {
+            font-size: 2rem;
+            font-family: 'Oswald';
+            letter-spacing: 2px;
+        }
+        .price {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #ff80b3;
+            margin: 20px 0;
+        }
+
+        /* сотрудничество */
+        .collab-block {
+            background: rgba(20,20,30,0.7);
+            backdrop-filter: blur(10px);
+            padding: 60px 40px;
+            border: 1px solid #ff3b9a40;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 0 60px #00000080;
+        }
+
+        /* футер */
+        footer {
+            padding: 40px 5%;
+            border-top: 1px solid #2a2a2a;
+            text-align: center;
+            color: #888;
+            background: #050505;
+        }
+
+        /* адаптив */
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background: #0b0b0bf0;
+                backdrop-filter: blur(20px);
+                position: absolute;
+                top: 80px;
+                right: 5%;
+                width: 220px;
+                padding: 30px 20px;
+                border: 1px solid #ff3b9a55;
+                gap: 25px;
+                border-radius: 10px;
+                box-shadow: 0 20px 30px black;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .btn {
+                padding: 14px 28px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* картинки в карточках — используем unsplash + градиенты для атмосферы */
+        .img1 { background-image: url('images/work1.jpg'), linear-gradient(145deg, #2b1a2e, #0f0c1b); background-blend-mode: overlay; }
+        .img2 { background-image: url('images/work2.jpg'), linear-gradient(145deg, #2b1a2e, #0f0c1b); background-blend-mode: overlay; }
+        .img3 { background-image: url('images/work3.jpg'), linear-gradient(145deg, #2b1a2e, #0f0c1b); background-blend-mode: overlay; }
+        .img4 { background-image: url('images/work4.jpg'), linear-gradient(145deg, #2b1a2e, #0f0c1b); background-blend-mode: overlay; }
+
+        /* бекстейдж видео — используем встроенное видео из интернета, абстрактный город для вайба */
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">AVAT<span>A</span>R</div>
+    <div class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </div>
+    <nav class="nav-links" id="navLinks">
+        <a href="#portfolio">Портфолио</a>
+        <a href="#pricing">Цены</a>
+        <a href="#collab">Сотрудничество</a>
+        <a href="#order">Заказать</a>
+    </nav>
+</header>
+
+<!-- HERO - прямо как в тизере GTA VI: неон, пальмы, атмосфера -->
+<section class="hero">
+    <!-- фоновое видео (петля абстрактного города) -->
+    <video class="hero-video-bg" autoplay muted loop playsinline poster="images/work1.jpg">
+    <source src="video/hero-bg.mp4" type="video/mp4">
+</video>
+    <div class="hero-fallback"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+        <div class="hero-subtitle">Дизайн студия</div>
+        <h1 class="hero-title">AVATAR</h1>
+        <p class="hero-description">Превью · Аватарки · Шапки для YouTube</p>
+        <div class="btn-group">
+            <a href="#order" class="btn btn-accent">Заказать</a>
+            <a href="#portfolio" class="btn">Портфолио</a>
+            <a href="#collab" class="btn">Сотрудничество</a>
+            <a href="#pricing" class="btn">Цены</a>
+        </div>
+        <div style="margin-top: 50px; font-size: 1rem; opacity: 0.8; letter-spacing: 4px;">
+            <i class="fas fa-chevron-down" style="animation: bounce 2s infinite;"></i>
+        </div>
+    </div>
+</section>
+
+<!-- ПОРТФОЛИО -->
+<section id="portfolio">
+    <div class="container">
+        <h2 class="section-title"><span>//</span> ПОРТФОЛИО</h2>
+        <div class="portfolio-grid">
+            <div class="portfolio-card" style="--i:1">
+                <div class="card-img img1"></div>
+                <div class="card-content">
+                    <h3>ПРЕВЬЮ</h3>
+                    <p>Превью от души и сердца с 3D графикой и контаурным светом</p>
+                </div>
+            </div>
+            <div class="portfolio-card" style="--i:2">
+                <div class="card-img img2"></div>
+                <div class="card-content">
+                    <h3>АВАТАРКИ</h3>
+                    <p>Делаю жёсткие аватарки с красотой и чёткостью</p>
+                </div>
+            </div>
+            <div class="portfolio-card" style="--i:3">
+                <div class="card-img img3"></div>
+                <div class="card-content">
+                    <h3>ШАПКИ</h3>
+                    <p>Шапки для YouTube, Twitch — очень имбово и чётенько</p>
+                </div>
+            </div>
+            <div class="portfolio-card" style="--i:4">
+                <div class="card-img img4"></div>
+                <div class="card-content">
+                    <h3>РЕТУШЬ</h3>
+                    <p>Превращу вашу фоточку в неймоверную супер темку</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ЦЕНЫ -->
+<section id="pricing" style="background: #0a0a0f;">
+    <div class="container">
+        <h2 class="section-title"><span>//</span> ЦЕНЫ</h2>
+        <div class="pricing-grid">
+            <div class="price-card">
+                <h4>АВАТАРКА</h4>
+                <div class="price">800₽</div>
+                <p>Уникальный аватар в 4K, исходники, права</p>
+                <div style="margin-top: 25px;"><a href="#order" class="btn" style="padding: 10px 25px; font-size:1rem;">Выбрать</a></div>
+            </div>
+            <div class="price-card">
+                <h4>ПРЕВЬЮ</h4>
+                <div class="price">1000₽</div>
+                <p>Кликбейт-превью с 3D, фотошоп-арт, ретушь</p>
+                <div style="margin-top: 25px;"><a href="#order" class="btn" style="padding: 10px 25px; font-size:1rem;">Выбрать</a></div>
+            </div>
+            <div class="price-card">
+                <h4>ШАПКА</h4>
+                <div class="price">2000₽</div>
+                <p>Баннер для YouTube / Twitch + соцсети</p>
+                <div style="margin-top: 25px;"><a href="#order" class="btn" style="padding: 10px 25px; font-size:1rem;">Выбрать</a></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- СОТРУДНИЧЕСТВО / ЗАКАЗ -->
+<section id="collab">
+    <div class="container">
+        <div class="collab-block">
+            <h2 class="section-title" style="font-size: 2.8rem; margin-top: 0;"><span>//</span> СОТРУДНИЧЕСТВО</h2>
+            <p style="font-size: 1.3rem; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">Мы работаем с топовыми блогерами. Индивидуальные условия, спонсорство, долгосрочные контракты.</p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="#" class="btn btn-accent"><i class="fab fa-discord"></i> Discord</a>
+                <a href="#" class="btn"><i class="fab fa-telegram"></i> Telegram</a>
+            </div>
+            <p style="margin-top: 35px; opacity: 0.8;">Или пишите на <strong>chulkovda9@gmail.com</strong></p>
+        </div>
+    </div>
+</section>
+
+<!-- ЗАКАЗАТЬ (форма или кнопка) -->
+<section id="order" style="padding: 80px 0;">
+    <div class="container" style="text-align: center;">
+        <h2 class="section-title" style="display: block; text-align: center;"><span>//</span> ЗАКАЗАТЬ ДИЗАЙН</h2>
+        <div style="max-width: 600px; margin: 40px auto; background: #131313; padding: 40px; border: 1px solid #ff3b9a55;">
+            <p style="font-size: 1.2rem; margin-bottom: 30px;">Оставь заявку — и мы свяжемся в течение часа</p>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <input type="text" placeholder="ТВОЁ ИМЯ" style="background: #0e0e0e; border: 1px solid #444; padding: 15px; color: white; font-family: 'Oswald';">
+                <input type="email" placeholder="EMAIL / TELEGRAM" style="background: #0e0e0e; border: 1px solid #444; padding: 15px; color: white; font-family: 'Oswald';">
+                <button class="btn btn-accent" style="width: 100%;">ОТПРАВИТЬ</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 AVATAR DESIGN STUDIO. Сделано по заказу для AVATAR. Все права защищены.</p>
+    <p style="margin-top: 15px; letter-spacing: 2px;">#AVATAR #DESIGN</p>
+</footer>
+
+<script>
+    (function() {
+        // Мобильное меню
+        const toggle = document.getElementById('menuToggle');
+        const nav = document.getElementById('navLinks');
+        if (toggle) {
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                nav.classList.toggle('active');
+            });
+        }
+        // Закрывать меню при клике на ссылку
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('active');
+            });
+        });
+
+        // Плавная прокрутка для якорных ссылок
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === "#" || href === "") return;
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // небольшая анимация появления при скролле (классно для атмосферы)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.portfolio-card, .price-card, .collab-block').forEach(el => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Заглушка для формы
+        const btnSubmit = document.querySelector('#order .btn');
+        if(btnSubmit) {
+            btnSubmit.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('🔥 AVATAR: заявка принята! Мы свяжемся с тобой в ближайшее время. Спасибо!');
+            });
+        }
+
+        // эффект параллакса для hero при движении мыши (добавляет глубины)
+        const hero = document.querySelector('.hero');
+        if(hero) {
+            hero.addEventListener('mousemove', (e) => {
+                const { clientX, clientY } = e;
+                const x = (clientX / window.innerWidth - 0.5) * 20;
+                const y = (clientY / window.innerHeight - 0.5) * 20;
+                const video = document.querySelector('.hero-video-bg');
+                if(video) {
+                    video.style.transform = `scale(1.05) translate(${x * 0.3}px, ${y * 0.2}px)`;
+                }
+            });
+            hero.addEventListener('mouseleave', () => {
+                const video = document.querySelector('.hero-video-bg');
+                if(video) video.style.transform = 'scale(1.02) translate(0,0)';
+            });
+        }
+
+        // дополнительно: динамическая подсветка кнопок
+    })();
+</script>
+
+<!-- небольшая анимация для стрелки -->
+<style>
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-15px); }
+        60% { transform: translateY(-5px); }
+    }
+    .fa-chevron-down { color: #ffb3d9; filter: drop-shadow(0 0 8px #ff3b9a); }
+    input:focus, button:focus { outline: 2px solid #ff3b9a; }
+    /* для Rockstar-вайба добавим зернистости */
+    body::after {
+        content: '';
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none;
+        background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wMjUiIC8+PC9zdmc+');
+        opacity: 0.15;
+        z-index: 9999;
+        mix-blend-mode: overlay;
+    }
+</style>
+
+</body>
+</html>
+```
